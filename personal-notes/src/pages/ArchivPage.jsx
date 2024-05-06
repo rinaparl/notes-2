@@ -2,33 +2,46 @@ import React, { useState, useEffect, useContext } from "react";
 import PropTypes from "prop-types";
 import NoteList from "../components/Notes/NoteList";
 import SearchBar from "../components/layout/SearchBar";
-import { getArchivedNotes, deleteNote, getNote } from "../utils/local-data";
+import { getArchivedNotes, deleteNote, getNote, unarchiveNote } from "../utils/network-data";
 import NoteListEmpty from "../components/Notes/NoteListEmpty";
 import LocaleContext from "../contexts/LocaleContext";
-import { unarchiveNote } from "../utils/network-data";
 
 function ArchivPage({ defaultKeyword, keywordChange }) {
-  const [notes, setNotes] = useState(getArchivedNotes());
+  const [notes, setNotes] = useState([]);
   const [keyword, setKeyword] = useState(defaultKeyword || "");
   const { locale } = useContext(LocaleContext);
 
   useEffect(() => {
-    setNotes(getArchivedNotes());
+    fetchData();
   }, []);
 
-  const onDeleteHandler = (id) => {
-    deleteNote(id);
-    setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    const fetchData = async () => {
+      try {
+        const archivedNotes = await getArchivedNotes();
+        setNotes(archivedNotes);
+      } catch (error) {
+        console.error("Error fetching archived notes:", error);
+      }
+    };
+
+  const onDeleteHandler = async (id) => {
+    try {
+      await deleteNote(id);
+      setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
-  const onUpdateArchive = (id) => {
-    if (id) {
+  const onUpdateArchive = async (id) => {
+    try {
       const note = getNote(id);
       note.archived = false;
+      await unarchiveNote(id);
       const updatedNotes = notes.filter((note) => note.id !== id);
       setNotes(updatedNotes);
-      // unarchiveNote(id);
-      // setNotes((prevNotes) => [...prevNotes, note]);
+    } catch (error) {
+      console.error("Error updating archive:", error);
     }
   };
 
@@ -39,9 +52,9 @@ function ArchivPage({ defaultKeyword, keywordChange }) {
     }
   };
 
-  const filteredNotes = notes.filter((note) =>
+  const filteredNotes = notes && notes.length > 0 ? notes.filter((note) =>
     note.title.toLowerCase().includes(keyword.toLowerCase())
-  );
+  ) : [];
 
   return (
     <section className="archive-page">

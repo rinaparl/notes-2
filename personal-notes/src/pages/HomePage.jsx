@@ -4,12 +4,13 @@ import { useSearchParams } from "react-router-dom";
 import NoteList from "../components/Notes/NoteList";
 import SearchBar from "../components/layout/SearchBar";
 import NavAdd from "../components/layout/NavAdd";
-import { getNote, getActiveNotes, deleteNote, archiveNote } from "../utils/network-data";
+import { getNote, getActiveNotes, deleteNote, archiveNote, getArchivedNotes } from "../utils/network-data";
 import LocaleContext from "../contexts/LocaleContext";
 
 function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [notes, setNotes] = useState([]);
+  const [archivedNotes, setArchivedNotes] = useState([]);
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
   const [loading, setLoading] = useState(true);
   const { locale } = useContext(LocaleContext);
@@ -26,8 +27,21 @@ function HomePage() {
         setLoading(false); 
       }
     };
+    
+    const fetchArchiveData = async () => {
+      try {
+        const { data } = await getArchivedNotes();
+        setArchivedNotes(data);
+      } catch (error) {
+        console.error("Error fetching archived data:", error);
+      }
+    };
+    
     fetchData();
+    fetchArchiveData();
   }, []);
+
+ 
 
   const onDeleteHandler = async (id) => {
     setLoading(true); 
@@ -83,6 +97,7 @@ function HomePage() {
         
         <NoteList
           notes={filteredNotes}
+          archivedNotes={archivedNotes}
           onDelete={onDeleteHandler}
           onUpdate={onUpdateArchive}
         />
