@@ -3,11 +3,11 @@ import PropTypes from "prop-types";
 import NoteItem from "./NoteItem";
 
 function NoteList({ notes, onDelete, onUpdate }) {
+  
   return (
     <div className="notes-list">
       {notes.length ?  (
-        <p className="notes-list__empty-message">Tidak ada catatan</p>
-      ) : (
+       
         <>
           {notes.map((note) => (
             <NoteItem
@@ -19,6 +19,8 @@ function NoteList({ notes, onDelete, onUpdate }) {
             />
           ))}
         </>
+      ) : (
+        <p className="notes-list__empty-message">Tidak ada catatan</p>
       )}
     </div>
   );

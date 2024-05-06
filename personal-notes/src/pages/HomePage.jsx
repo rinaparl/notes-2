@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import NoteList from "../components/Notes/NoteList";
 import SearchBar from "../components/layout/SearchBar";
 import NavAdd from "../components/layout/NavAdd";
-import { getNote, getActiveNotes, deleteNote } from "../utils/network-data";
+import { getNote, getActiveNotes, deleteNote, archiveNote } from "../utils/network-data";
 import LocaleContext from "../contexts/LocaleContext";
 
 function HomePage() {
@@ -48,6 +48,7 @@ function HomePage() {
       if (id) {
         const note = await getNote(id);
         note.archived = true;
+        // await archiveNote(id);
         const updatedNotes = notes.filter((note) => note.id !== id);
         setNotes(updatedNotes);
       }
@@ -70,6 +71,7 @@ function HomePage() {
   const filteredNotes = notes && notes.length > 0 ? notes.filter((note) =>
     note.title.toLowerCase().includes(keyword.toLowerCase())
   ) : [];
+  
 
   return (
     <section className="homepage">
@@ -78,6 +80,7 @@ function HomePage() {
         <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
       </section>
       <section>
+        
         <NoteList
           notes={filteredNotes}
           onDelete={onDeleteHandler}

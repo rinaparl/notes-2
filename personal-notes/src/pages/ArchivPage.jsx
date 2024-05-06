@@ -5,11 +5,16 @@ import SearchBar from "../components/layout/SearchBar";
 import { getArchivedNotes, deleteNote, getNote } from "../utils/local-data";
 import NoteListEmpty from "../components/Notes/NoteListEmpty";
 import LocaleContext from "../contexts/LocaleContext";
+import { unarchiveNote } from "../utils/network-data";
 
 function ArchivPage({ defaultKeyword, keywordChange }) {
   const [notes, setNotes] = useState(getArchivedNotes());
   const [keyword, setKeyword] = useState(defaultKeyword || "");
   const { locale } = useContext(LocaleContext);
+
+  useEffect(() => {
+    setNotes(getArchivedNotes());
+  }, []);
 
   const onDeleteHandler = (id) => {
     deleteNote(id);
@@ -22,6 +27,8 @@ function ArchivPage({ defaultKeyword, keywordChange }) {
       note.archived = false;
       const updatedNotes = notes.filter((note) => note.id !== id);
       setNotes(updatedNotes);
+      // unarchiveNote(id);
+      // setNotes((prevNotes) => [...prevNotes, note]);
     }
   };
 

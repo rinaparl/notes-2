@@ -3,7 +3,7 @@ import { HiPlus } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
 import PageAction from "./PageAction";
 
-function NavAdd({logout, name}) {
+function NavAdd() {
   const navigate = useNavigate()
 
   return (

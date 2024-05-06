@@ -1,47 +1,65 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getNote } from "../utils/local-data";
+import { getNote, deleteNote, getActiveNotes } from "../utils/network-data";
 import { showFormattedDate } from "../utils";
 import NotFound from "./NotFound";
-import NoteAction from "../components/Notes/NoteAction";
+
 
 const DetailPage = () => {
   const { id } = useParams();
   const [note, setNote] = useState();
 
-  const fetchNote = (id) => {
+  useEffect(() => {
+    const fetchNote = async () => {
+      try {
+        const { data } = await getNote(id);
+        setNote(data);
+      } catch (error) {
+        console.error("Error fetching note:", error);
+      }
+    };
+
+    fetchNote();
+  }, [id]);
+
+  const onDeleteHandler = async () => {
     try {
-      const note = getNote(id);
-      setNote(note);
-    } catch (error) {}
+      await deleteNote(id);
+      const { data } = await getActiveNotes();
+      setNote(data);
+    } catch (error) {
+      console.error("Error deleting note:", error);
+    }
   };
 
-  
-
-  useEffect(() => {
-    fetchNote(id);
-  }, [id]);
+  const onUpdateArchive = async () => {
+    try {
+      if (id) {
+        const note = await getNote(id);
+        note.archived = true;
+        // await archiveNote(id);
+        const updatedNotes = note.filter((note) => note.id !== id);
+        setNote(updatedNotes);
+      }
+    } catch (error) {
+      console.error("Error updating archive:", error);
+    }
+  };
 
   return (
     <section className="detail-page">
-      { id && note ? (
+      {id && note ? (
         <>
-          <h3 className="detail-page__title">
-            {note.title}
-          </h3>
+          <h3 className="detail-page__title">{note.title}</h3>
           <p className="detail-page__createdAt">
             {showFormattedDate(note.createdAt)}
           </p>
-          <div className="detail-page__body">
-            {note.body}
-          </div>
-    
+          <div className="detail-page__body">{note.body}</div>
+         
         </>
       ) : (
-        <NotFound/>
+        <NotFound />
       )}
-      
-
     </section>
   );
 };

@@ -1,6 +1,4 @@
 import React, {useState, useEffect } from "react";
-import ToggleTheme from "../components/layout/ToggleTheme";
-import { ThemeProvider } from "../contexts/ThemeContext";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import LoginInput from "../components/auth/LoginInput";
@@ -19,7 +17,6 @@ function LoginPage({ loginSuccess }) {
   const { locale } = React.useContext(LocaleContext);
 
   return (
-    // <ThemeProvider value={{ theme, ToggleTheme}}>
     <section className="login-page">
       <h2>
         {locale === "id"
@@ -34,7 +31,6 @@ function LoginPage({ loginSuccess }) {
         </Link>
       </p>
     </section>
-    // </ThemeProvider>
   );
 }
 

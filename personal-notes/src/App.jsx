@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import ToggleTheme from "./components/layout/ToggleTheme";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { Link, Route, Routes } from "react-router-dom";
 import NavBar from "./components/layout/NavBar";
@@ -20,10 +19,12 @@ function App() {
   const [initializing, setInitializing] = useState(true);
   const [locale, setLocale] = useState(localStorage.getItem("locale") || "id");
   const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-  const ToggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    localStorage.setItem("theme", newTheme);
-    setTheme(newTheme);
+  
+  const toggleTheme = () => {
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === "light" ? "dark" : "light";
+      localStorage.setItem("theme", newTheme);
+    });
   };
 
   useEffect(() => {
@@ -63,7 +64,7 @@ function App() {
 
   return (
     <LocaleProvider value={{ locale, toggleLocale }}>
-      <ThemeProvider value={{theme, ToggleTheme}}>
+      <ThemeProvider value={{theme, toggleTheme}}>
       <div className="app-container">
         <header>
           <h1>
