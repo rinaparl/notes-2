@@ -62,7 +62,7 @@ function HomePage() {
       if (id) {
         const note = await getNote(id);
         note.archived = true;
-        // await archiveNote(id);
+        
         const updatedNotes = notes.filter((note) => note.id !== id);
         setNotes(updatedNotes);
       }
@@ -97,7 +97,7 @@ function HomePage() {
         
         <NoteList
           notes={filteredNotes}
-          archivedNotes={archivedNotes}
+          // archivedNotes={archivedNotes}
           onDelete={onDeleteHandler}
           onUpdate={onUpdateArchive}
         />

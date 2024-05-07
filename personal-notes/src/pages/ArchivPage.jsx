@@ -37,7 +37,7 @@ function ArchivPage({ defaultKeyword, keywordChange }) {
     try {
       const note = getNote(id);
       note.archived = false;
-      await unarchiveNote(id);
+      // await unarchiveNote(id);
       const updatedNotes = notes.filter((note) => note.id !== id);
       setNotes(updatedNotes);
     } catch (error) {

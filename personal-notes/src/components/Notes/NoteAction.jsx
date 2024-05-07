@@ -4,7 +4,7 @@ import { HiOutlineTrash } from "react-icons/hi";
 import { BiArchiveIn, BiArchiveOut } from "react-icons/bi";
 import PageAction from "./PageAction";
 
-function NoteAction({ archived, handleArchive, handleDelete }) {
+function NoteAction({ archived, onUpdateArchive, onDeleteHandler }) {
   return (
     <PageAction page="detail-page">
       <>
@@ -12,7 +12,7 @@ function NoteAction({ archived, handleArchive, handleDelete }) {
           className="action"
           type="button"
           title={archived ? "Aktifkan" : "Archive"}
-          onClick={() => handleArchive()}
+          onClick={() => onUpdateArchive()}
         >
           {archived ? <BiArchiveOut /> : <BiArchiveIn />}
         </button>
@@ -20,7 +20,7 @@ function NoteAction({ archived, handleArchive, handleDelete }) {
           className="action"
           type="button"
           title="Delete"
-          onClick={() => handleDelete()}
+          onClick={() => onDeleteHandler()}
         >
           <HiOutlineTrash />
         </button>
@@ -31,8 +31,8 @@ function NoteAction({ archived, handleArchive, handleDelete }) {
 
 NoteAction.propTypes = {
   archived: PropTypes.bool.isRequired,
-  handleArchive: PropTypes.func.isRequired,
-  handleDelete: PropTypes.func.isRequired,
+  onUpdateArchive: PropTypes.func.isRequired,
+  onDeleteHandler: PropTypes.func.isRequired,
 };
 
 export default NoteAction;

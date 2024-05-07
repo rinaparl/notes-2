@@ -34,11 +34,11 @@ function NavBar({ logout, name }) {
                 <li>
                   {pathname !== "/archives" ? (
                     <Link to="/archives" title="home">
-                      Terarsip
+                      {locale === "id" ? "Terarsip" : "Archived"}
                     </Link>
                   ) : (
                     <Link to="/" title="Archive">
-                      Home
+                      {locale === "id" ? "Menu" : "Home"}
                     </Link>
                   )}
                 </li>

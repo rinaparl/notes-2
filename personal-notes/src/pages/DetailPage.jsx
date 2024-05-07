@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getNote, deleteNote, getActiveNotes } from "../utils/network-data";
+import { getNote, deleteNote, getActiveNotes, archiveNote } from "../utils/network-data";
 import { showFormattedDate } from "../utils";
 import NotFound from "./NotFound";
+import NoteAction from "../components/Notes/NoteAction";
 
 
 const DetailPage = () => {
@@ -35,11 +36,15 @@ const DetailPage = () => {
   const onUpdateArchive = async () => {
     try {
       if (id) {
-        const note = await getNote(id);
-        note.archived = true;
-        // await archiveNote(id);
-        const updatedNotes = note.filter((note) => note.id !== id);
-        setNote(updatedNotes);
+        // const note = await getNote(id);
+        // note.archived = true;
+        await archiveNote(id);
+        setNote((prevNote) => ({
+          ...prevNote,
+          archived: true
+        }));
+        // const updatedNotes = note.filter((note) => note.id !== id);
+        // setNote(updatedNotes);
       }
     } catch (error) {
       console.error("Error updating archive:", error);
@@ -55,7 +60,11 @@ const DetailPage = () => {
             {showFormattedDate(note.createdAt)}
           </p>
           <div className="detail-page__body">{note.body}</div>
-         
+         <NoteAction
+            archived={note.archived}
+            onDeleteHandler={onDeleteHandler}
+            onUpdateArchive={onUpdateArchive}
+         />
         </>
       ) : (
         <NotFound />
